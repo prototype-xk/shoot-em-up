@@ -1,41 +1,54 @@
 #include <SDL3/SDL.h>
+#include <stdbool.h>
+#include "select_level.h"
 
-int main(int argc, char** argv)
-{
-    SDL_Window* window;
-    SDL_Renderer* renderer;
 
-    SDL_SetAppMetadata("SDL Test", "1.0", "games.anakata.test-sdl");
-    if (!SDL_Init(SDL_INIT_VIDEO))
-        return 1;
+int main(int argc, char* argv[]) {
+	if (!SDL_Init(SDL_INIT_VIDEO)) {
+		SDL_Log("Erreur SDL_Init: %s", SDL_GetError());
+		return 1;
+	}
 
-    if (!SDL_CreateWindowAndRenderer("HELLO SDL", 640, 480, SDL_WINDOW_RESIZABLE, &window, &renderer))
-        return 1;
+	SDL_Window* window = SDL_CreateWindow("Bouton SDL 3", 800, 600, 0);
+	SDL_Renderer* renderer = SDL_CreateRenderer(window, nullptr);
 
-    SDL_SetRenderLogicalPresentation(renderer, 640, 480, SDL_LOGICAL_PRESENTATION_LETTERBOX);
 
-    bool keepGoing = true;
-    do
-    {
-        SDL_Event event;
-        while (SDL_PollEvent(&event))
-        {
-            if (event.type == SDL_EVENT_QUIT)
-                keepGoing = false;
-        }
+	Button myButton = createButton(100, 25, 200, 100, "World 1");
+	Button myButton2 = createButton(100, 150, 200, 100, "World 2");
+	Button myButton3 = createButton(100, 275, 200, 100, "World 3");
+	Button myButton4 = createButton(100, 400, 200, 100, "World 4");
 
-        const double now = ((double)SDL_GetTicks()) / 1000.0;  /* convert from milliseconds to seconds. */
+	bool running = true;
+	SDL_Event e;
 
-        const float red = (float)(0.5 + 0.5 * SDL_sin(now));
-        const float green = (float)(0.5 + 0.5 * SDL_sin(now + SDL_PI_D * 2 / 3));
-        const float blue = (float)(0.5 + 0.5 * SDL_sin(now + SDL_PI_D * 4 / 3));
-        SDL_SetRenderDrawColorFloat(renderer, red, green, blue, 1.0f);
+	while (running) {
+		while (SDL_PollEvent(&e)) {
+			if (e.type == SDL_EVENT_QUIT) running = false;
 
-        SDL_RenderClear(renderer);
-        SDL_RenderPresent(renderer);
-    } while (keepGoing);
+			handleButtonEvent(&myButton, &e);
+			handleButtonEvent(&myButton2, &e);
+			handleButtonEvent(&myButton3, &e);
+			handleButtonEvent(&myButton4, &e);
 
-    SDL_DestroyRenderer(renderer);
-    SDL_DestroyWindow(window);
-    return 0;
+			if (isButtonClicked(&myButton, &e)) SDL_Log("Bouton 1 cliqué !");
+			if (isButtonClicked(&myButton2, &e)) SDL_Log("Bouton 2 cliqué !");
+			if (isButtonClicked(&myButton3, &e)) SDL_Log("Bouton 3 cliqué !");
+			if (isButtonClicked(&myButton4, &e)) SDL_Log("Bouton 4 cliqué !");
+		}
+
+		SDL_SetRenderDrawColor(renderer, 240, 240, 240, 255);
+		SDL_RenderClear(renderer);
+
+		renderButton(renderer, &myButton);
+		renderButton(renderer, &myButton2);
+		renderButton(renderer, &myButton3);
+		renderButton(renderer, &myButton4);
+
+		SDL_RenderPresent(renderer);
+	}
+
+	SDL_DestroyRenderer(renderer);
+	SDL_DestroyWindow(window);
+	SDL_Quit();
+	return 0;
 }
