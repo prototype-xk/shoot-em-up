@@ -31,6 +31,7 @@ void Select::handleEvent(const SDL_Event& event, int& selectedLevel) {
             selectedLevel = 4 + currentWorld; // ? Monde suivant !
         }
     }
+
     else {
         // Gerer les evenements normaux de selection de niveau
         handleButtonEvent(&buttonLevel1, const_cast<SDL_Event*>(&event));
