@@ -18,7 +18,7 @@ void Select::showWorldTransition(int worldNumber) {
 
 void Select::handleEvent(const SDL_Event& event, int& selectedLevel) {
     if (inTransition) {
-        // Gérer les evenements de l'ecran de transition
+        // Gerer les evenements de l'ecran de transition
         handleButtonEvent(&buttonBackToMenu, const_cast<SDL_Event*>(&event));
         handleButtonEvent(&buttonNextWorld, const_cast<SDL_Event*>(&event));
 
@@ -28,7 +28,7 @@ void Select::handleEvent(const SDL_Event& event, int& selectedLevel) {
         }
         else if (isButtonClicked(&buttonNextWorld, const_cast<SDL_Event*>(&event))) {
             inTransition = false;
-            selectedLevel = 4 + currentWorld; // ? Monde suivant !
+            selectedLevel = 1 + currentWorld; // ? Monde suivant !
         }
     }
 
@@ -63,9 +63,7 @@ void Select::draw(SDL_Renderer* renderer) {
 
         // Pour l'instant, on dessine juste les boutons
         renderButton(renderer, &buttonBackToMenu);
-        if (!isFinalWorld) {
-            renderButton(renderer, &buttonNextWorld);
-        }
+        renderButton(renderer, &buttonNextWorld);
     }
     else {
         // Dessiner l'ecran de selection normal
