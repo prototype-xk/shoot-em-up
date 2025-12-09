@@ -28,7 +28,7 @@ void Select::handleEvent(const SDL_Event& event, int& selectedLevel) {
         }
         else if (isButtonClicked(&buttonNextWorld, const_cast<SDL_Event*>(&event))) {
             inTransition = false;
-            selectedLevel = 1 + currentWorld; // ? Monde suivant !
+            selectedLevel = 1 + currentWorld; 
         }
     }
 
