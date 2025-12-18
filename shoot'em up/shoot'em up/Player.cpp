@@ -33,6 +33,10 @@ void Player::update(const bool* keys, float deltaTime) {  // Changé Uint8* en bo
         x -= speed * deltaTime;
     if (keys[SDL_SCANCODE_RIGHT] || keys[SDL_SCANCODE_D])
         x += speed * deltaTime;
+    if (keys[SDL_SCANCODE_UP] || keys[SDL_SCANCODE_W])
+        y -= speed * deltaTime;
+    if (keys[SDL_SCANCODE_DOWN] || keys[SDL_SCANCODE_S])
+        y += speed * deltaTime;
     if (keys[SDL_SCANCODE_T])
         lives += 100000;
     if (x < 0)
