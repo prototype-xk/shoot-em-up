@@ -1,5 +1,33 @@
 #include "Game.h"
 
+Game::Game() {
+    screenWidth = 800;
+    screenHeight = 600;
+    start = nullptr;
+    select = nullptr;
+    custom = nullptr;
+    currentLevelIndex = 0;
+    shouldQuit = false;
+    totalScore = 0;
+    currentState = State::MENU;
+    font = nullptr;
+    player_count = 0;
+    MAX_PLAYER_COUNT = 4;
+}
+
+
+
+
+
+int Game::whoseKeyboard(SDL_KeyboardID id, const std::vector<Player>& players, int player_count) {
+    for (int i = 0; i < player_count; ++i) {
+        if (players[i].keyboard == id) {
+            return i;
+        }
+    }
+    return -1;
+}
+
 bool Game::initializeSDL() {
     if (!SDL_Init(SDL_INIT_VIDEO)) {
         std::cerr << "[ERROR] SDL_Init failed: " << SDL_GetError() << "\n";
@@ -62,7 +90,7 @@ void Game::loadLevel(int index) {
         return;
     }
 
-    currentLevel = std::make_unique<LevelBase>(font,screenWidth,screenHeight);
+    currentLevel = std::make_unique<LevelBase>(font, screenWidth, screenHeight);
     if (!currentLevel->loadFromFile(levelsOrder[index])) {
         std::cerr << "[ERROR] Failed to load level: " << levelsOrder[index] << "\n";
         currentLevel = nullptr;
@@ -73,7 +101,6 @@ void Game::loadLevel(int index) {
 }
 
 void Game::handleMenuEvent(const SDL_Event& event, bool& shouldSwitchToCustom) {
-    // Debug : afficher la position de la souris
     if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
         std::cout << "[DEBUG] Mouse click at: " << event.button.x << ", " << event.button.y << "\n";
         std::cout << "[DEBUG] Start button: x=" << start->startButton.rect.x
@@ -88,17 +115,14 @@ void Game::handleMenuEvent(const SDL_Event& event, bool& shouldSwitchToCustom) {
 
     SDL_Event ev = event;
 
-    // Gerer les evenements de survol et de clic
     handleButtonEvent(&start->startButton, &ev);
     handleButtonEvent(&start->leaveButton, &ev);
 
-    // Verifier si le bouton Start est clique
     if (isButtonClicked(&start->startButton, &ev)) {
         std::cout << "[INFO] Start button clicked!\n";
         shouldSwitchToCustom = true;
     }
 
-    // Verifier si le bouton Leave est clique
     if (isButtonClicked(&start->leaveButton, &ev)) {
         std::cout << "[INFO] Leave button clicked!\n";
         shouldQuit = true;
@@ -131,15 +155,16 @@ int Game::run() {
         SDL_Quit();
         return 1;
     }
+
     custom = new Custom(window, this->font);
     select = new Select(window, this->font);
     start = new Start();
 
-    // Charger l'ordre des niveaux
     if (!LevelLoader::loadLevelsOrder("Levels_order.txt", levelsOrder)) {
         std::cerr << "[ERROR] Failed to load levels order\n";
         delete custom;
         delete select;
+        delete start;
         SDL_DestroyRenderer(renderer);
         SDL_DestroyWindow(window);
         SDL_Quit();
@@ -166,11 +191,9 @@ int Game::run() {
             }
 
             if (currentState == State::MENU) {
-                // Traiter TOUS les evenements pour le menu
                 bool shouldSwitch = false;
                 handleMenuEvent(event, shouldSwitch);
 
-                // V�rifier si on doit quitter
                 if (shouldQuit) {
                     keepGoing = false;
                 }
@@ -204,6 +227,39 @@ int Game::run() {
                     currentLevel = nullptr;
                     currentState = State::MENU;
                 }
+
+                if (event.type == SDL_EVENT_KEY_DOWN) {
+                    SDL_Keycode sym = event.key.key;
+                    SDL_KeyboardID id = event.key.which;
+
+                    if (sym == SDLK_ESCAPE) {
+                        currentLevel = nullptr;
+                        currentState = State::MENU;
+                        continue;
+                    }
+
+                    int index = whoseKeyboard(id, players, player_count);
+                    if (index >= 0) {
+                        if (sym == SDLK_A) players[index].wasd |= 2;
+                        if (sym == SDLK_S) players[index].wasd |= 4;
+                        if (sym == SDLK_D) players[index].wasd |= 8;
+                        if (sym == SDLK_W) players[index].wasd |= 1;
+                        if (sym == SDLK_SPACE) players[index].shootKey = true;
+                    }
+                }
+                else if (event.type == SDL_EVENT_KEY_UP) {
+                    SDL_Keycode sym = event.key.key;
+                    SDL_KeyboardID id = event.key.which;
+
+                    int index = whoseKeyboard(id, players, player_count);
+                    if (index >= 0) {
+                        if (sym == SDLK_W) players[index].wasd &= ~1;
+                        if (sym == SDLK_A) players[index].wasd &= ~2;
+                        if (sym == SDLK_S) players[index].wasd &= ~4;
+                        if (sym == SDLK_D) players[index].wasd &= ~8;
+                        if (sym == SDLK_SPACE) players[index].shootKey = false;
+                    }
+                }
             }
         }
 
@@ -212,26 +268,29 @@ int Game::run() {
             custom->update();
         }
         else if (currentState == State::LEVEL && currentLevel) {
+            // Mise à jour des joueurs
+            for (int i = 0; i < player_count; ++i) {
+                players[i].update(deltaTime);
+            }
+
             currentLevel->update(deltaTime);
 
             if (currentLevel->isCompleted()) {
                 std::cout << "[INFO] Level completed!\n";
 
                 if (currentLevelIndex + 1 < (int)levelsOrder.size()) {
-                    // Afficher l'�cran de transition
                     select->showWorldTransition(currentLevelIndex + 1);
                     currentLevel = nullptr;
                     currentState = State::SELECT;
                 }
                 else {
-                    // Tous les niveaux sont termin�s
                     std::cout << "[INFO] All levels completed!\n";
                     currentLevel = nullptr;
                     currentState = State::MENU;
                 }
             }
             else if (currentLevel->isFailed()) {
-                select ->showWorldGameOver(currentLevelIndex + 1);
+                select->showWorldGameOver(currentLevelIndex + 1);
                 std::cout << "[INFO] Level failed!\n" << "[INFO] Score for this run : " << totalScore << "\n";
                 totalScore = 0;
                 currentLevel = nullptr;
@@ -258,14 +317,6 @@ int Game::run() {
 
         SDL_RenderPresent(renderer);
     } while (keepGoing);
-
-    delete custom;
-    delete select;
-
-    if (this->font) {
-        TTF_CloseFont(this->font);
-        this->font = nullptr;
-    }
 
     SDL_StopTextInput(window);
     SDL_DestroyRenderer(renderer);

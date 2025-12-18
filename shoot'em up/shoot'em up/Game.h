@@ -10,17 +10,19 @@
 #include "LevelBase.h"
 #include "LevelLoader.h"
 #include "Start.h"
+#include "Player.h"
 
 class Game
 {
 public:
-    Game() = default;
+    Game();
     int run();
     int getScreenWidth() const { return screenWidth; }
     int getScreenHeight() const { return screenHeight; }
+
 private:
-    int screenWidth = 800;
-    int screenHeight = 600;
+    int screenWidth;
+    int screenHeight;
     Start* start=nullptr;
     Select* select = nullptr;
     Custom* custom = nullptr;
@@ -28,12 +30,18 @@ private:
     int currentLevelIndex;
     std::unique_ptr<LevelBase> currentLevel;
     bool shouldQuit = false;
-    int totalScore = 0;
+    int totalScore;
 
-    enum class State { MENU, CUSTOM, SELECT, LEVEL };
+    enum class State { MENU, CUSTOM, SELECT, LEVEL};
     State currentState;
     Button menuButton;
     TTF_Font* font = nullptr;
+
+    std::vector<Player> players;
+    int player_count;
+    int MAX_PLAYER_COUNT;
+
+    int whoseKeyboard(SDL_KeyboardID id, const std::vector<Player>& players, int player_count);
 
     void loadLevel(int index);
     void handleMenuEvent(const SDL_Event& event, bool& shouldSwitchToCustom);

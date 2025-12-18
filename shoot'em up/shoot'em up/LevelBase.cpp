@@ -107,7 +107,7 @@ void LevelBase::handleCollisions() {
             if (player.checkCollision(pit->rect)) {
                 if (!player.isInvincible()) {
                     player.lives--;
-                    player.invicibilityTimer = 1.0f;
+                    player.invincibilityTimer = 1.0f;
                     std::cout << "Player hit! Lives : " << player.lives << "\n";
                     if (player.lives <= 0) {
                         levelFailed = true;
@@ -143,7 +143,7 @@ void LevelBase::handleEvent(const SDL_Event& event, bool& shouldSwitchToMenu) {
 
 void LevelBase::update(float deltaTime) {
     const bool* keys = SDL_GetKeyboardState(NULL);
-    player.update(keys, deltaTime);
+    player.update(deltaTime);
 
     float elapsed = (SDL_GetTicks() - levelStartTime) / 1000.0f;
     while (currentCommand < script.size() && elapsed >= script[currentCommand].time) {
@@ -162,7 +162,7 @@ void LevelBase::update(float deltaTime) {
     for (auto& enemy : enemies) {
         if (!player.isInvincible() && player.checkCollision(enemy->rect)) {
             player.lives--;
-            player.invicibilityTimer = 2.0f;
+            player.invincibilityTimer = 2.0f;
             std::cout << "Player touched" << player.lives << "\n";
             break;
         }
