@@ -75,21 +75,7 @@ private:
     float shotTimer = 0.0f;
 };
 
-class Elder_Guardian : public Enemy {
-public:
-    Elder_Guardian(float px, float py, int sw, int sh);
 
-    void update(float deltaTime, Player& player) override;
-    void render(SDL_Renderer* renderer) override;
-    int getType()const override;
-
-private:
-    // Plusieurs états pour l'ennemi
-    enum Phase { BURST, PAUSE };
-    Phase currentPhase = BURST;
-    float phaseTimer = 0.0f;
-    float shotTimer = 0.0f;
-};
 class SkeletonEnemy : public Enemy {
 public:
     SkeletonEnemy(float px, float py, int sw, int sh);
@@ -108,16 +94,6 @@ public:
     int getType() const override;
 };
 
-class WitherBoss : public Enemy {
-public:
-    WitherBoss(float px, float py, int sw, int sh);
-
-    void update(float deltaTime, Player& player) override;
-    void render(SDL_Renderer* renderer) override;
-    int getType() const override;
-};
-
-
 class ShulkerEnemy : public Enemy {
 private:
     // Est invincible en fonction du temps
@@ -129,15 +105,6 @@ public:
     void update(float deltaTime, Player& player) override;
     void render(SDL_Renderer* renderer) override;
     bool checkCollision(const SDL_FRect& other) override; // Permet de savoir si oui ou non les dégats sont acceptés
-    int getType() const override;
-};
-
-class DragonBoss : public Enemy {
-
-public:
-    DragonBoss(float px, float py, int sw, int sh);
-    void update(float deltaTime, Player& player) override;
-    void render(SDL_Renderer* renderer) override;
     int getType() const override;
 };
 
@@ -166,17 +133,6 @@ public:
     void update(float deltaTime, Player& player) override;
     void render(SDL_Renderer* renderer) override;
     int getType() const override;
-};
-
-class WardenBoss : public Enemy {
-public:
-    WardenBoss(float px, float py, int sw, int sh, int& wardenHealthRef);
-    void update(float deltaTime, Player& player) override;
-    void render(SDL_Renderer* renderer) override;
-    int getType() const override;
-private:
-    int& wardenHealthRef;  // Référence à WardenHealth dans LevelBase pour liaison de la santé
-    int maxHealth;         // Santé maximale pour calculer les phases
 };
 
 std::unique_ptr<Enemy> createEnemy(int type, float x, float y, int screenWidth, int screenHeight,SDL_Renderer* renderer);

@@ -138,6 +138,8 @@
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="Custom.cpp" />
     <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="EnemyBoss.cpp" />
+    <ClCompile Include="EnemyManager.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Label.cpp" />
     <ClCompile Include="LevelBase.cpp" />
@@ -154,6 +156,8 @@
     <ClInclude Include="Button.h" />
     <ClInclude Include="Custom.h" />
     <ClInclude Include="Enemy.h" />
+    <ClInclude Include="EnemyBoss.h" />
+    <ClInclude Include="EnemyManager.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Label.h" />
     <ClInclude Include="LevelBase.h" />
