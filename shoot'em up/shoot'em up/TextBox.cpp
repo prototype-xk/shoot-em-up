@@ -39,7 +39,6 @@ void TextBox::handleEvent(const SDL_Event& e) {
         std::cout << "[DEBUG] Texte input received: " << e.text.text << "\n";
     }
 
-    // Gestion du clic pour focus
     bool wasFocused = m_focused;
     if (e.type == SDL_EVENT_MOUSE_BUTTON_DOWN && e.button.button == SDL_BUTTON_LEFT) {
         float x = static_cast<float>(e.button.x);
@@ -48,7 +47,6 @@ void TextBox::handleEvent(const SDL_Event& e) {
         std::cout << "[DEBUG] TextBox focused: " << m_focused << "\n";
     }
 
-    // Saisie de texte
     if (e.type == SDL_EVENT_TEXT_INPUT && m_focused) {
         if (m_text.length() < m_maxLength) {
             m_text += e.text.text;
@@ -56,7 +54,6 @@ void TextBox::handleEvent(const SDL_Event& e) {
         }
     }
 
-    // Touche backspace
     if (e.type == SDL_EVENT_KEY_DOWN && m_focused) {
         if (e.key.scancode == SDL_SCANCODE_BACKSPACE && !m_text.empty()) {
             m_text.pop_back();
@@ -66,7 +63,6 @@ void TextBox::handleEvent(const SDL_Event& e) {
 }
 
 void TextBox::update() {
-    // Gestion du clignotement du curseur
     Uint32 now = SDL_GetTicks();
     if (now - m_lastBlink >= 500) {
         m_cursorVisible = !m_cursorVisible;
@@ -75,26 +71,17 @@ void TextBox::update() {
 }
 
 void TextBox::render(SDL_Renderer* renderer) {
-    // Mettre à jour le curseur de la souris
     updateCursor(renderer);
-
-    // Dessiner le fond de la boîte
     SDL_SetRenderDrawColor(renderer, 200, 200, 200, 255);
     SDL_RenderFillRect(renderer, &m_box);
-
-    // Dessiner le contour
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderRect(renderer, &m_box);
-
-    // Dessiner le texte avec un scale
     SDL_SetRenderScale(renderer, 1.5f, 1.5f);
     SDL_RenderDebugText(renderer,
         (m_box.x + 5.0f) / 1.5f,
         (m_box.y + (m_box.h / 2.0f) - 8.0f) / 1.5f,
         m_text.c_str());
     SDL_SetRenderScale(renderer, 1.0f, 1.0f);
-
-    // Dessiner le curseur si focused
     if (m_focused && m_cursorVisible) {
         float cursorX = m_box.x + 5.0f + static_cast<float>(m_text.length()) * 8.0f * 1.5f;
         float cursorY = m_box.y + 5.0f;

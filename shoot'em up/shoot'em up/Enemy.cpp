@@ -55,8 +55,7 @@ void BasicEnemy::update(float deltaTime, Player& player) {
 
     static float shotTimer = 0.0f;
     shotTimer += deltaTime;
-    if (shotTimer >= 2.0f) { // Tire toute les 2 secondes
-        // Taille, la postion et vitesse du projectile
+    if (shotTimer >= 2.0f) {
         projectiles.push_back({
             x + 12,
             y + 32,
@@ -65,9 +64,8 @@ void BasicEnemy::update(float deltaTime, Player& player) {
             false,
             {x + rect.w / 2 - 4,y + rect.h,8,8}
             });
-        shotTimer = 0.0f; // Timer r�initialiser
+        shotTimer = 0.0f;
     }
-    // Si le projectile sort de la fen�tre et n'est donc plus visible alors on le supprime
     for (auto it = projectiles.begin();
         it != projectiles.end(); ) {
 
@@ -77,8 +75,6 @@ void BasicEnemy::update(float deltaTime, Player& player) {
         else ++it;
     }
 }
-
-// Cr�er l'ennemi ainsi que sa couleur et la couleur de ses projectiles
 void BasicEnemy::render(SDL_Renderer* renderer) {
     SDL_SetRenderDrawColor(renderer, 62, 137, 134, 255);
     SDL_RenderFillRect(renderer, &rect);
@@ -86,7 +82,7 @@ void BasicEnemy::render(SDL_Renderer* renderer) {
     for (auto& p : projectiles) SDL_RenderFillRect(renderer, &p.rect);
 }
 
-int BasicEnemy::getType() const { return 23; } // ID de l'ennemi
+int BasicEnemy::getType() const { return 23; }
 
 ZigzagEnemy::ZigzagEnemy(float px, float py, int sw, int sh) : Enemy(px, py,sw,sh) {}
 
@@ -98,8 +94,7 @@ void ZigzagEnemy::update(float deltaTime, Player& player) {
 
     static float shotTimer = 0.0f;
     shotTimer += deltaTime;
-    if (shotTimer >= 1.0f) {// Tire toute les 1 secondes
-        // Taille, la postion et vitesse du projectile
+    if (shotTimer >= 1.0f) {
         projectiles.push_back({
             x + 12,
             y + 32,
@@ -110,9 +105,8 @@ void ZigzagEnemy::update(float deltaTime, Player& player) {
             y + rect.h,
             8,
             8} });
-        shotTimer = 0.0f; // Timer r�initialiser
+        shotTimer = 0.0f;
     }
-    // Si le projectile sort de la fen�tre et n'est donc plus visible alors on le supprime
     for (auto it = projectiles.begin();
         it != projectiles.end(); ) {
 
@@ -122,8 +116,6 @@ void ZigzagEnemy::update(float deltaTime, Player& player) {
         else ++it;
     }
 }
-
-// Cr�er l'ennemi ainsi que sa couleur et la couleur de ses projectiles
 void ZigzagEnemy::render(SDL_Renderer* renderer) {
     SDL_SetRenderDrawColor(renderer, 58, 164, 118, 255);
     SDL_RenderFillRect(renderer, &rect);
@@ -131,7 +123,7 @@ void ZigzagEnemy::render(SDL_Renderer* renderer) {
     for (auto& p : projectiles) SDL_RenderFillRect(renderer, &p.rect);
 }
 
-int ZigzagEnemy::getType() const { return 24; } // ID de l'ennemi
+int ZigzagEnemy::getType() const { return 24; }
 
 Drowned::Drowned(float px, float py, int sw, int sh) : Enemy(px, py, sw, sh) {}
 
@@ -201,7 +193,7 @@ void Guardian::update(float deltaTime, Player& player) {
     phaseTimer += deltaTime;
     if (currentPhase == BURST) { 
         shotTimer += deltaTime;
-        if (shotTimer >= 0.001f) { // Tire un projectile toute les 0.001 secondes
+        if (shotTimer >= 0.001f) {
             float dx = player.x - x;
             float dy = player.y - y;
             float distance = sqrt(dx * dx + dy * dy);
@@ -218,15 +210,12 @@ void Guardian::update(float deltaTime, Player& player) {
                 });
             shotTimer = 0.0f;
         }
-
-        // Apr�s 1.5 secondes en Burst, ne fait rien durant son �tat pause
         if (phaseTimer >= 1.5f) {
             currentPhase = PAUSE;
             phaseTimer = 0.0f;
             shotTimer = 0.0f;
         }
     }
-    // Apr�s 2 secondes en Pause, recommence � tirer en Burst
     else {
         if (phaseTimer >= 2.0f) {
             currentPhase = BURST;
@@ -266,7 +255,7 @@ void Elder_Guardian::update(float deltaTime, Player& player)
     phaseTimer += deltaTime;
     if (currentPhase == BURST) {
         shotTimer += deltaTime;
-        if (shotTimer >= 0.001f) { // Tire un projectile toute les 0.001 secondes
+        if (shotTimer >= 0.001f) {
             float dx = player.x - x;
             float dy = player.y - y;
             float distance = sqrt(dx * dx + dy * dy);
@@ -283,15 +272,12 @@ void Elder_Guardian::update(float deltaTime, Player& player)
                 });
             shotTimer = 0.0f;
         }
-
-        // Apr�s 1.5 secondes en Burst, ne fait rien durant son �tat pause
         if (phaseTimer >= 1.5f) {
             currentPhase = PAUSE;
             phaseTimer = 0.0f;
             shotTimer = 0.0f;
         }
     }
-    // Apr�s 2 secondes en Pause, recommence � tirer en Burst
     else {
         if (phaseTimer >= 2.0f) {
             currentPhase = BURST;
@@ -457,8 +443,8 @@ void WitherBoss::render(SDL_Renderer* renderer) {
 int WitherBoss::getType() const { return 6; }
 
 ShulkerEnemy::ShulkerEnemy(float px, float py, int sw, int sh) : Enemy(px, py, sw, sh),
-    invulnerabilityTimer(0.0f),// Timer � 0
-    isInvulnerable(false) // COmmence en �tant invincible = faux
+    invulnerabilityTimer(0.0f),
+    isInvulnerable(false)
 {
 }
 
@@ -468,29 +454,23 @@ void ShulkerEnemy::update(float deltaTime, Player& player) {
     rect.y = y;
 
     invulnerabilityTimer += deltaTime;
-
-    // EN dessous de 3 secondes shulker n'est pas invincible
     if (invulnerabilityTimer < 3.0f) {
         isInvulnerable = false;
     }
-    // Sinon en dessous de 4 secondes shulker devient invincible; 3 secondes vuln�rable; 1 seconde invincible
     else if (invulnerabilityTimer < 4.0f) {
         isInvulnerable = true;
     }
     else {
-        invulnerabilityTimer = 0.0f; // Reset � 0
+        invulnerabilityTimer = 0.0f;
     }
 
     static float shotTimer = 0.0f;
     shotTimer += deltaTime;
     if (shotTimer >= 5.0f) {
         if (player.y > y) {
-            // Calcul de la direction vers le joueur
             float dx = player.x - x;
             float dy = player.y - y;
             float distance = sqrt(dx * dx + dy * dy);
-
-            // Normalisation et application de la vitesse
             float speed = 150.0f;
             float vx = (dx / distance) * speed;
             float vy = (dy / distance) * speed;
@@ -504,14 +484,11 @@ void ShulkerEnemy::update(float deltaTime, Player& player) {
             {x + rect.w / 2 - 4, y + rect.h, 8, 8}
                 });
         }
-        shotTimer = 0.0f; // Rest � 0
+        shotTimer = 0.0f;
 
         
     }
-
-    // Mise a jour des projectiles avec guidage
     for (auto it = projectiles.begin(); it != projectiles.end(); ) {
-        // Guidage vers le joueur
         float dx = player.x - it->x;
         float dy = player.y - it->y;
         float distance = sqrt(dx * dx + dy * dy);
@@ -520,17 +497,11 @@ void ShulkerEnemy::update(float deltaTime, Player& player) {
 
         if (distance > minHomingDistance) {
             float homingStrength = 100.0f;
-
-            // Direction vers le joueur
             float targetVx = (dx / distance) * 200.0f;
             float targetVy = (dy / distance) * 200.0f;
-
-            // Interpolation vers la direction cible
             it->vx += (targetVx - it->vx) * homingStrength * deltaTime / 200.0f;
             it->vy += (targetVy - it->vy) * homingStrength * deltaTime / 200.0f;
         }
-        // Sinon, le projectile continue en ligne droite
-
         it->update(deltaTime);
 
         if (it->isOffScreen(screenWidth, screenHeight))
@@ -542,12 +513,11 @@ void ShulkerEnemy::update(float deltaTime, Player& player) {
 
 void ShulkerEnemy::render(SDL_Renderer* renderer) {
     if (texture) {
-        // Changer la couleur de la texture selon l'�tat
         if (isInvulnerable) {
-            SDL_SetTextureColorMod(texture, 128, 128, 128);  // Gris�
+            SDL_SetTextureColorMod(texture, 128, 128, 128);
         }
         else {
-            SDL_SetTextureColorMod(texture, 255, 255, 255);  // Normal
+            SDL_SetTextureColorMod(texture, 255, 255, 255);
         }
         SDL_RenderTexture(renderer, texture, nullptr, &rect);
     }
@@ -581,8 +551,6 @@ DragonBoss::DragonBoss(float px, float py, int sw, int sh) : Enemy(px, py,sw,sh)
 }
 
 void DragonBoss::update(float deltaTime, Player& player) {
-
-    // Position et vitesse de tout les projectiles
     static float shotTimer = 0.0f;
     shotTimer += deltaTime;
     if (shotTimer >= 2.0f) {
@@ -799,7 +767,7 @@ void SculkEnemy::render(SDL_Renderer* renderer) {
 int SculkEnemy::getType() const { return 11; }
 
 WardenBoss::WardenBoss(float px, float py, int sw, int sh, int& wardenHealthRef) : Enemy(px, py, sw, sh), wardenHealthRef(wardenHealthRef) {
-    maxHealth = 150;  // NERF : Réduit de 200 à 150 pour le rendre plus vulnérable
+    maxHealth = 150;
     rect.w = 120;
     rect.h = 100;
 }
@@ -811,15 +779,12 @@ void WardenBoss::update(float deltaTime, Player& player) {
     changeDirectionTimer += deltaTime;
     random rd;
 
-    // Calcul des phases basé sur la santé actuelle
     int currentPhase = 0;
-    if (wardenHealthRef <= 120) currentPhase = 1;  // NERF : Phases ajustées pour commencer plus tôt
+    if (wardenHealthRef <= 120) currentPhase = 1;
     if (wardenHealthRef <= 80) currentPhase = 2;
     if (wardenHealthRef <= 40) currentPhase = 3;
-    if (wardenHealthRef <= 15) currentPhase = 4;  // NERF : Phase finale plus tôt
-
-    // Mouvement (NERF : Vitesse réduite et délai augmenté pour changer de direction)
-    float directionChangeDelay = 1.5f - (currentPhase * 0.1f);  // Augmenté de 1.2f à 1.5f
+    if (wardenHealthRef <= 15) currentPhase = 4;
+    float directionChangeDelay = 1.5f - (currentPhase * 0.1f);
     if (changeDirectionTimer >= directionChangeDelay + rd.getRandomNumber(0, 80) / 100.0f) {
         int randomChoice = rd.getRandomNumber(0, 3);
         if (randomChoice == 0) direction = -1.0f;
@@ -828,8 +793,8 @@ void WardenBoss::update(float deltaTime, Player& player) {
         changeDirectionTimer = 0.0f;
     }
 
-    float baseSpeed = 100 + (currentPhase * 50);  // NERF : Réduit de 120 à 100, et augmentation par phase réduite
-    float speed = rd.getRandomNumber(baseSpeed, baseSpeed + 200);  // Plage réduite
+    float baseSpeed = 100 + (currentPhase * 50);
+    float speed = rd.getRandomNumber(baseSpeed, baseSpeed + 200);
     x += direction * speed * deltaTime;
 
     if (x < 0) x = 0;
@@ -841,7 +806,6 @@ void WardenBoss::update(float deltaTime, Player& player) {
     static float specialAttackTimer = 0.0f;
     static float spiralTimer = 0.0f;
     static float waveTimer = 0.0f;
-    // NOUVEAU : Timers pour spawns de Phantom et Sculk
     static float phantomSpawnTimer = 0.0f;
     static float sculkSpawnTimer = 0.0f;
 
@@ -851,21 +815,15 @@ void WardenBoss::update(float deltaTime, Player& player) {
     waveTimer += deltaTime;
     phantomSpawnTimer += deltaTime;
     sculkSpawnTimer += deltaTime;
-
-    // PHASE 0 - Pattern de base (NERF : Moins de projectiles, délai plus long)
-    float shotDelay = 0.9f;  // Augmenté de 0.7f
-    int numProjectiles = 4;  // Réduit de 5
-    float spreadAngle = 0.5f;  // Réduit de 0.6f
-
-    // PHASE 1 - Augmentation intensité (120 HP ou moins) (NERF : Moins agressif)
+    float shotDelay = 0.9f;
+    int numProjectiles = 4;
+    float spreadAngle = 0.5f;
     if (currentPhase >= 1) {
-        shotDelay = 0.6f;  // Augmenté de 0.5f
-        numProjectiles = 5;  // Réduit de 7
-        spreadAngle = 0.6f;  // Réduit de 0.8f
-
-        // Vagues en colonnes (NERF : Moins de colonnes, délai plus long)
-        if (waveTimer >= 3.0f) {  // Augmenté de 2.5f
-            int numColumns = 4;  // Réduit de 5
+        shotDelay = 0.6f;
+        numProjectiles = 5;
+        spreadAngle = 0.6f;
+        if (waveTimer >= 3.0f) {
+            int numColumns = 4;
             float columnSpacing = screenWidth / (numColumns + 1.0f);
 
             for (int col = 0; col < numColumns; col++) {
@@ -874,7 +832,7 @@ void WardenBoss::update(float deltaTime, Player& player) {
                     xPos,
                     y + rect.h / 2,
                     0.0f,
-                    200.0f,  // Réduit de 250.0f
+                    200.0f,
                     false,
                     {xPos - 8, y + rect.h / 2 - 8, 16, 16}
                     });
@@ -882,25 +840,19 @@ void WardenBoss::update(float deltaTime, Player& player) {
             waveTimer = 0.0f;
         }
     }
-
-    // PHASE 2 - Dangereux (80 HP ou moins) (NERF : Patterns moins denses)
     if (currentPhase >= 2) {
-        shotDelay = 0.5f;  // Augmenté de 0.4f
-        numProjectiles = 0;  // Réduit de 9
-        spreadAngle = 0.8f;  // Réduit de 1.0f
-
-        // Spirale lente avec gaps (NERF : Moins de projectiles, délai plus long)
-        if (spiralTimer >= 0.2f) {  // Augmenté de 0.15f
+        shotDelay = 0.5f;
+        numProjectiles = 0;
+        spreadAngle = 0.8f;
+        if (spiralTimer >= 0.2f) {
             static float spiralAngle = 0.0f;
-            spiralAngle += 0.4f;  // Réduit de 0.5f
-
-            // Seulement 3 projectiles au lieu de 4 pour plus de gaps
+            spiralAngle += 0.4f;
             for (int i = 0; i < 3; i++) {
                 float angle = spiralAngle + (i * 3.14159f * 2 / 3);
                 projectiles.push_back({
                     x + rect.w / 2,
                     y + rect.h / 2,
-                    cos(angle) * 120.0f,  // Réduit de 150.0f
+                    cos(angle) * 120.0f,
                     sin(angle) * 120.0f,
                     false,
                     {x + rect.w / 2 - 6, y + rect.h / 2 - 6, 12, 12}
@@ -908,16 +860,13 @@ void WardenBoss::update(float deltaTime, Player& player) {
             }
             spiralTimer = 0.0f;
         }
-
-        // Cercle avec gaps (NERF : Moins de projectiles, délai plus long)
-        if (specialAttackTimer >= 4.0f) {  // Augmenté de 3.0f
-            // 10 projectiles au lieu de 12
+        if (specialAttackTimer >= 4.0f) {
             for (int i = 0; i < 10; i++) {
                 float angle = (i / 10.0f) * 3.14159f * 2;
                 projectiles.push_back({
                     x + rect.w / 2,
                     y + rect.h / 2,
-                    cos(angle) * 180.0f,  // Réduit de 200.0f
+                    cos(angle) * 180.0f,
                     sin(angle) * 180.0f,
                     false,
                     {x + rect.w / 2 - 6, y + rect.h / 2 - 6, 12, 12}
@@ -926,26 +875,20 @@ void WardenBoss::update(float deltaTime, Player& player) {
             specialAttackTimer = 0.0f;
         }
     }
-
-    // PHASE 3 - Difficile mais fair (40 HP ou moins) (NERF : Plus de gaps)
     if (currentPhase >= 3) {
-        shotDelay = 0.3f;  // Augmenté de 0.2f
-        numProjectiles = 0;  // Réduit de 11
-        spreadAngle = 1.0f;  // Réduit de 1.2f
-
-        // Double spirale alternée (NERF : Moins de projectiles par spirale)
-        if (spiralTimer >= 0.15f) {  // Augmenté de 0.12f
+        shotDelay = 0.3f;
+        numProjectiles = 0;
+        spreadAngle = 1.0f;
+        if (spiralTimer >= 0.15f) {
             static float spiralAngle = 0.0f;
-            spiralAngle += 0.5f;  // Réduit de 0.6f
-
-            // 2 spirales de 2 projectiles chacune
+            spiralAngle += 0.5f;
             for (int spiral = 0; spiral < 2; spiral++) {
                 for (int i = 0; i < 2; i++) {
                     float angle = spiralAngle + (i * 3.14159f) + (spiral * 3.14159f / 2);
                     projectiles.push_back({
                         x + rect.w / 2,
                         y + rect.h / 2,
-                        cos(angle) * (150.0f + spiral * 20.0f),  // Réduit
+                        cos(angle) * (150.0f + spiral * 20.0f),
                         sin(angle) * (150.0f + spiral * 20.0f),
                         false,
                         {x + rect.w / 2 - 6, y + rect.h / 2 - 6, 12, 12}
@@ -954,10 +897,8 @@ void WardenBoss::update(float deltaTime, Player& player) {
             }
             spiralTimer = 0.0f;
         }
-
-        // Pattern "rideau" (NERF : Moins de colonnes)
-        if (specialAttackTimer >= 3.0f) {  // Augmenté de 2.5f
-            int numCols = 5;  // Réduit de 6
+        if (specialAttackTimer >= 3.0f) {
+            int numCols = 5;
             float spacing = screenWidth / (numCols + 1.0f);
 
             for (int i = 0; i < numCols; i++) {
@@ -966,7 +907,7 @@ void WardenBoss::update(float deltaTime, Player& player) {
                     xPos,
                     y + rect.h / 2,
                     0.0f,
-                    250.0f,  // Réduit de 300.0f
+                    250.0f,
                     false,
                     {xPos - 8, y + rect.h / 2 - 8, 16, 16}
                     });
@@ -974,25 +915,19 @@ void WardenBoss::update(float deltaTime, Player& player) {
             specialAttackTimer = 0.0f;
         }
     }
-
-    // PHASE 4 - FINALE INTENSE MAIS JOUABLE (15 HP ou moins) (NERF : Plus de gaps, vitesses réduites)
     if (currentPhase >= 4) {
-        shotDelay = 0.2f;  // Augmenté de 0.15f
-        numProjectiles = 0;  // Réduit de 13
-        spreadAngle = 1.2f;  // Réduit de 1.4f
-
-        // Triple spirale (NERF : Moins de projectiles)
-        if (spiralTimer >= 0.12f) {  // Augmenté de 0.1f
+        shotDelay = 0.2f;
+        numProjectiles = 0;
+        spreadAngle = 1.2f;
+        if (spiralTimer >= 0.12f) {
             static float spiralAngle = 0.0f;
-            spiralAngle += 0.6f;  // Réduit de 0.8f
-
-            // 3 spirales de 1 projectile = beaucoup d'espace
+            spiralAngle += 0.6f;
             for (int spiral = 0; spiral < 3; spiral++) {
                 float angle = spiralAngle + (spiral * 3.14159f * 2 / 3);
                 projectiles.push_back({
                     x + rect.w / 2,
                     y + rect.h / 2,
-                    cos(angle) * (170.0f + spiral * 30.0f),  // Réduit
+                    cos(angle) * (170.0f + spiral * 30.0f),
                     sin(angle) * (170.0f + spiral * 30.0f),
                     false,
                     {x + rect.w / 2 - 7, y + rect.h / 2 - 7, 14, 14}
@@ -1000,19 +935,15 @@ void WardenBoss::update(float deltaTime, Player& player) {
             }
             spiralTimer = 0.0f;
         }
-
-        // Cercles alternés (NERF : Moins de projectiles)
-        if (specialAttackTimer >= 2.5f) {  // Augmenté de 2.0f
+        if (specialAttackTimer >= 2.5f) {
             static int alternatePattern = 0;
             alternatePattern = (alternatePattern + 1) % 2;
-
-            // 12 projectiles max
             for (int i = 0; i < 12; i++) {
                 float angle = (i / 12.0f) * 3.14159f * 2 + (alternatePattern * 0.22f);
                 projectiles.push_back({
                     x + rect.w / 2,
                     y + rect.h / 2,
-                    cos(angle) * 220.0f,  // Réduit de 250.0f
+                    cos(angle) * 220.0f,
                     sin(angle) * 220.0f,
                     false,
                     {x + rect.w / 2 - 8, y + rect.h / 2 - 8, 16, 16}
@@ -1020,10 +951,8 @@ void WardenBoss::update(float deltaTime, Player& player) {
             }
             specialAttackTimer = 0.0f;
         }
-
-        // Pattern "pluie" (NERF : Plus d'espaces)
-        if (waveTimer >= 2.0f) {  // Augmenté de 1.5f
-            int numCols = 10;  // Réduit de 8
+        if (waveTimer >= 2.0f) {
+            int numCols = 10;
             float spacing = screenWidth / (numCols + 1.0f);
 
             static int offset = 0;
@@ -1035,7 +964,7 @@ void WardenBoss::update(float deltaTime, Player& player) {
                     xPos,
                     y + rect.h / 2,
                     0.0f,
-                    300.0f,  // Réduit de 350.0f
+                    300.0f,
                     false,
                     {xPos - 10, y + rect.h / 2 - 10, 20, 20}
                     });
@@ -1051,23 +980,18 @@ void WardenBoss::update(float deltaTime, Player& player) {
             projectiles.push_back({
                 x + rect.w / 2,
                 y + rect.h,
-                sin(angle) * 80.0f,  // Réduit de 100.0f
-                350.0f + (currentPhase * 40.0f),  // Réduit
+                sin(angle) * 80.0f,
+                350.0f + (currentPhase * 40.0f),
                 false,
                 {x + rect.w / 2 - 4 + i * 8, y + rect.h, 8, 8}
                 });
         }
         shotTimer = 0.0f;
     }
-
-    // NOUVEAU : Logique de spawn pour Phantom et Sculk (seulement en phases avancées pour équilibrer)
-    if (currentPhase >= 2 && phantomSpawnTimer >= 6.0f + rd.getRandomNumber(0, 200) / 100.0f) {  // Toutes les 6-8 secondes
-        // Ici, tu dois ajouter le spawn dans ton game loop. Par exemple :
-        // enemies.push_back(createEnemy(10, x + rd.getRandomNumber(-50, 50), y - 50, screenWidth, screenHeight));  // Phantom
+    if (currentPhase >= 2 && phantomSpawnTimer >= 6.0f + rd.getRandomNumber(0, 200) / 100.0f) {
         phantomSpawnTimer = 0.0f;
     }
-    if (currentPhase >= 3 && sculkSpawnTimer >= 9.0f + rd.getRandomNumber(0, 200) / 100.0f) {  // Toutes les 9-11 secondes
-        // enemies.push_back(createEnemy(11, x + rd.getRandomNumber(-50, 50), y - 50, screenWidth, screenHeight));  // Sculk
+    if (currentPhase >= 3 && sculkSpawnTimer >= 9.0f + rd.getRandomNumber(0, 200) / 100.0f) {
         sculkSpawnTimer = 0.0f;
     }
 

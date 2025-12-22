@@ -70,7 +70,7 @@ void Player::setScreenBounds(int width, int height) {
     screenHeight = height;
 }
 
-void Player::update(const bool* keys, float deltaTime) {  // Changé Uint8* en bool*
+void Player::update(const bool* keys, float deltaTime) {
     float speed = 500;
     if (keys[SDL_SCANCODE_LEFT] || keys[SDL_SCANCODE_A])
         x -= speed * deltaTime;
@@ -93,7 +93,6 @@ void Player::update(const bool* keys, float deltaTime) {  // Changé Uint8* en bo
     rect.x = x;
     rect.y = y;
 
-    //Gére le Timer d'invincibilité
     if (invicibilityTimer > 0) {
         invicibilityTimer -= deltaTime;
     }

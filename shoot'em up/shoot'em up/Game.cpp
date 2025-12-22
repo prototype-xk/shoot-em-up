@@ -63,7 +63,6 @@ void Game::loadLevel(int index) {
     }
 
     currentLevel = std::make_unique<LevelBase>(font, screenWidth, screenHeight);
-    // AJOUTE renderer ici (tu devras le passer en paramètre ou le stocker dans Game)
     if (!currentLevel->loadFromFile(levelsOrder[index], renderer)) {
         std::cerr << "[ERROR] Failed to load level: " << levelsOrder[index] << "\n";
         currentLevel = nullptr;
@@ -74,7 +73,6 @@ void Game::loadLevel(int index) {
 }
 
 void Game::handleMenuEvent(const SDL_Event& event, bool& shouldSwitchToCustom) {
-    // Debug : afficher la position de la souris
     if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
         std::cout << "[DEBUG] Mouse click at: " << event.button.x << ", " << event.button.y << "\n";
         std::cout << "[DEBUG] Start button: x=" << start->startButton.rect.x
@@ -89,17 +87,14 @@ void Game::handleMenuEvent(const SDL_Event& event, bool& shouldSwitchToCustom) {
 
     SDL_Event ev = event;
 
-    // Gérer les évenements de survol et de clic
     handleButtonEvent(&start->startButton, &ev);
     handleButtonEvent(&start->leaveButton, &ev);
 
-    // Vérifier si le bouton Start est cliqué
     if (isButtonClicked(&start->startButton, &ev)) {
         std::cout << "[INFO] Start button clicked!\n";
         shouldSwitchToCustom = true;
     }
 
-    // Vérifier si le bouton Leave est cliqué
     if (isButtonClicked(&start->leaveButton, &ev)) {
         std::cout << "[INFO] Leave button clicked!\n";
         shouldQuit = true;
@@ -136,7 +131,6 @@ int Game::run() {
     select = new Select(window, this->font);
     start = new Start();
 
-    // Charger l'ordre des niveaux
     if (!LevelLoader::loadLevelsOrder("Levels_order.txt", levelsOrder)) {
         std::cerr << "[ERROR] Failed to load levels order\n";
         delete custom;
@@ -167,11 +161,9 @@ int Game::run() {
             }
 
             if (currentState == State::MENU) {
-                // Traiter tous les evenements pour le menu
                 bool shouldSwitch = false;
                 handleMenuEvent(event, shouldSwitch);
 
-                // Vérifier si on doit quitter
                 if (shouldQuit) {
                     keepGoing = false;
                 }
@@ -208,7 +200,6 @@ int Game::run() {
             }
         }
 
-        // Update
         if (currentState == State::CUSTOM) {
             custom->update();
         }
@@ -219,13 +210,11 @@ int Game::run() {
                 std::cout << "[INFO] Level completed!\n";
 
                 if (currentLevelIndex + 1 < (int)levelsOrder.size()) {
-                    // Afficher l'�cran de transition
                     select->showWorldTransition(currentLevelIndex + 1);
                     currentLevel = nullptr;
                     currentState = State::SELECT;
                 }
                 else {
-                    // Tous les niveaux sont termin�s
                     std::cout << "[INFO] All levels completed!\n";
                     currentLevel = nullptr;
                     currentState = State::MENU;
@@ -240,7 +229,6 @@ int Game::run() {
             }
         }
 
-        // Draw
         SDL_SetRenderDrawColorFloat(renderer, 0.0f, 0.0f, 0.0f, 1.0f);
         SDL_RenderClear(renderer);
 

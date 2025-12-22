@@ -13,7 +13,7 @@ class Enemy {
 protected:
     int screenWidth;
     int screenHeight;
-    float shotTimer; // cooldown pour le projectile
+    float shotTimer;
 public:
     float x, y;
     SDL_FRect rect;
@@ -26,10 +26,10 @@ public:
 
     void loadTexture(SDL_Renderer* renderer, const char* imagePath);
 
-    virtual void update(float deltaTime, Player& player) = 0; // IA de l'ennemi
-    virtual void render(SDL_Renderer* renderer) = 0; // Dessiner l'ennemi
-    virtual bool checkCollision(const SDL_FRect& other); // Permet de savoir si oui ou non les dégats sont acceptés
-    virtual int getType() const = 0; // ID de l'ennemi
+    virtual void update(float deltaTime, Player& player) = 0;
+    virtual void render(SDL_Renderer* renderer) = 0;
+    virtual bool checkCollision(const SDL_FRect& other);
+    virtual int getType() const = 0;
 };
 
 class BasicEnemy : public Enemy {
@@ -68,7 +68,6 @@ public:
     int getType()const override;
 
 private:
-    // Plusieurs états pour l'ennemi
     enum Phase { BURST, PAUSE };
     Phase currentPhase = BURST;
     float phaseTimer = 0.0f;
@@ -84,7 +83,6 @@ public:
     int getType()const override;
 
 private:
-    // Plusieurs états pour l'ennemi
     enum Phase { BURST, PAUSE };
     Phase currentPhase = BURST;
     float phaseTimer = 0.0f;
@@ -120,7 +118,6 @@ public:
 
 class ShulkerEnemy : public Enemy {
 private:
-    // Est invincible en fonction du temps
     float invulnerabilityTimer;
     bool isInvulnerable;
 public:
@@ -128,7 +125,7 @@ public:
 
     void update(float deltaTime, Player& player) override;
     void render(SDL_Renderer* renderer) override;
-    bool checkCollision(const SDL_FRect& other) override; // Permet de savoir si oui ou non les dégats sont acceptés
+    bool checkCollision(const SDL_FRect& other) override;
     int getType() const override;
 };
 
@@ -175,8 +172,8 @@ public:
     void render(SDL_Renderer* renderer) override;
     int getType() const override;
 private:
-    int& wardenHealthRef;  // Référence à WardenHealth dans LevelBase pour liaison de la santé
-    int maxHealth;         // Santé maximale pour calculer les phases
+    int& wardenHealthRef;
+    int maxHealth;
 };
 
 std::unique_ptr<Enemy> createEnemy(int type, float x, float y, int screenWidth, int screenHeight,SDL_Renderer* renderer);

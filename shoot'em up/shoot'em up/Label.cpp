@@ -12,13 +12,10 @@ Label::Label(float x, float y, const std::string& text, float scale)
 }
 
 void Label::render(SDL_Renderer* renderer) {
-	// Sauvegarde l'état actuel
 	SDL_SetRenderDrawColor(renderer, m_r, m_g, m_b, m_a);
 
-	// Dessiner le texte
 	SDL_RenderDebugText(renderer, m_x / m_scale, m_y / m_scale, m_text.c_str());
 
-	// Réinitialiser le scale
 	SDL_SetRenderScale(renderer, 1.0f, 1.0f);
 }
 

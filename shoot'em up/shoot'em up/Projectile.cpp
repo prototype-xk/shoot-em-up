@@ -4,7 +4,6 @@ Projectile::Projectile(float x, float y, float vx, float vy, bool isPlayer, SDL_
     : x(x), y(y), vx(vx), vy(vy), isPlayer(isPlayer), rect(rect), texture(tex) {
 }
 
-// Base pour cr�er le projectile
 void Projectile::update(float deltaTime) {
     x += vx * deltaTime;
     y += vy * deltaTime;
@@ -12,6 +11,6 @@ void Projectile::update(float deltaTime) {
     rect.y = y;
 }
 
-bool Projectile::isOffScreen(int w, int h) { // Supprime le projectile une fois qu'il a disparu de l'�cran
+bool Projectile::isOffScreen(int w, int h) {
 	return x<0 || x>w || y<0 || y>h;
 }

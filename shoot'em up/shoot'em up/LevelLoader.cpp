@@ -3,8 +3,6 @@
 #include <iostream>
 #include <sstream>
 
-// Charge la liste ordonnée des niveaux à partir d’un fichier texte.
-// Retourne 'false' si le fichier ne peut pas être ouvert ou s’il est vide.
 bool LevelLoader::loadLevelsOrder(const std::string& path, std::vector<std::string>& outLevels) {
     std::ifstream file(path);
     if (!file.is_open()) {
@@ -15,7 +13,7 @@ bool LevelLoader::loadLevelsOrder(const std::string& path, std::vector<std::stri
     outLevels.clear();
     std::string line;
     while (std::getline(file, line)) {
-        if (!line.empty() && line[0] != '#') { // Ignore les lignes qui commencent avec un #
+        if (!line.empty() && line[0] != '#') {
             outLevels.push_back(line);
         }
     }
