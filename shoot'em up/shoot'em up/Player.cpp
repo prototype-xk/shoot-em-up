@@ -97,7 +97,7 @@ void Player::update(const bool* keys, float deltaTime) {
         invicibilityTimer -= deltaTime;
     }
 
-    static float shotTimer = 0.0f;
+    float shotTimer = 0.0f;
     shotTimer += deltaTime;
 
 

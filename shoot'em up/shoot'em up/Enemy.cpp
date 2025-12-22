@@ -53,7 +53,7 @@ void BasicEnemy::update(float deltaTime, Player& player) {
     rect.x = x;
     rect.y = y;
 
-    static float shotTimer = 0.0f;
+    float shotTimer = 0.0f;
     shotTimer += deltaTime;
     if (shotTimer >= 2.0f) {
         projectiles.push_back({
@@ -92,7 +92,7 @@ void ZigzagEnemy::update(float deltaTime, Player& player) {
     x += sin(moveTimer * 5.0f) * 150.0f * deltaTime;
     rect.x = x; rect.y = y;
 
-    static float shotTimer = 0.0f;
+    float shotTimer = 0.0f;
     shotTimer += deltaTime;
     if (shotTimer >= 1.0f) {
         projectiles.push_back({
@@ -145,7 +145,7 @@ void Drowned::update(float deltaTime, Player& player)
     rect.x = x;
     rect.y = y;
 
-    static float shotTimer = 1.5f;
+    float shotTimer = 1.5f;
     shotTimer += deltaTime;
     if (shotTimer >= 2.0f) {
         projectiles.push_back({
@@ -311,7 +311,7 @@ void SkeletonEnemy::update(float deltaTime, Player& player) {
     rect.x = x;
     rect.y = y;
 
-    static float shotTimer = 0.0f;
+    float shotTimer = 0.0f;
     shotTimer += deltaTime;
     if (shotTimer >= 2.0f) {
         projectiles.push_back({
@@ -355,7 +355,7 @@ void BlazeEnemy::update(float deltaTime, Player& player) {
     rect.x = x;
     rect.y = y;
 
-    static float shotTimer = 0.0f;
+    float shotTimer = 0.0f;
     shotTimer += deltaTime;
     if (shotTimer >= 2.0f) {
         float dx = player.x - x;
@@ -404,7 +404,7 @@ void WitherBoss::update(float deltaTime, Player& player) {
     rect.x = x;
     rect.y = y;
 
-    static float shotTimer = 0.0f;
+    float shotTimer = 0.0f;
     shotTimer += deltaTime;
     if (shotTimer >= 2.0f) {
         float dx = player.x - x;
@@ -464,7 +464,7 @@ void ShulkerEnemy::update(float deltaTime, Player& player) {
         invulnerabilityTimer = 0.0f;
     }
 
-    static float shotTimer = 0.0f;
+    float shotTimer = 0.0f;
     shotTimer += deltaTime;
     if (shotTimer >= 5.0f) {
         if (player.y > y) {
@@ -551,7 +551,7 @@ DragonBoss::DragonBoss(float px, float py, int sw, int sh) : Enemy(px, py,sw,sh)
 }
 
 void DragonBoss::update(float deltaTime, Player& player) {
-    static float shotTimer = 0.0f;
+    float shotTimer = 0.0f;
     shotTimer += deltaTime;
     if (shotTimer >= 2.0f) {
         projectiles.push_back({
@@ -670,7 +670,7 @@ void PhantomEnemy::update(float deltaTime, Player& player) {
     rect.x = x;
     rect.y = y;
 
-    static float shotTimer = 0.0f;
+    float shotTimer = 0.0f;
     shotTimer += deltaTime;
     if (shotTimer >= 0.6f) {
         projectiles.push_back({
@@ -717,7 +717,7 @@ void SculkEnemy::update(float deltaTime, Player& player) {
     x += sin(moveTimer * 7.0f) * 200.0f * deltaTime;
     rect.x = x; rect.y = y;
 
-    static float shotTimer = 0.0f;
+    float shotTimer = 0.0f;
     shotTimer += deltaTime;
     if (shotTimer >= 0.6f) {
         projectiles.push_back({
@@ -774,8 +774,8 @@ WardenBoss::WardenBoss(float px, float py, int sw, int sh, int& wardenHealthRef)
 
 void WardenBoss::update(float deltaTime, Player& player) {
     moveTimer += deltaTime;
-    static float changeDirectionTimer = 0.0f;
-    static float direction = -1.0f;
+    float changeDirectionTimer = 0.0f;
+    float direction = -1.0f;
     changeDirectionTimer += deltaTime;
     random rd;
 
@@ -802,12 +802,12 @@ void WardenBoss::update(float deltaTime, Player& player) {
     rect.x = x;
     rect.y = y;
 
-    static float shotTimer = 0.0f;
-    static float specialAttackTimer = 0.0f;
-    static float spiralTimer = 0.0f;
-    static float waveTimer = 0.0f;
-    static float phantomSpawnTimer = 0.0f;
-    static float sculkSpawnTimer = 0.0f;
+    float shotTimer = 0.0f;
+    float specialAttackTimer = 0.0f;
+    float spiralTimer = 0.0f;
+    float waveTimer = 0.0f;
+    float phantomSpawnTimer = 0.0f;
+    float sculkSpawnTimer = 0.0f;
 
     shotTimer += deltaTime;
     specialAttackTimer += deltaTime;
@@ -845,7 +845,7 @@ void WardenBoss::update(float deltaTime, Player& player) {
         numProjectiles = 0;
         spreadAngle = 0.8f;
         if (spiralTimer >= 0.2f) {
-            static float spiralAngle = 0.0f;
+            float spiralAngle = 0.0f;
             spiralAngle += 0.4f;
             for (int i = 0; i < 3; i++) {
                 float angle = spiralAngle + (i * 3.14159f * 2 / 3);
@@ -880,7 +880,7 @@ void WardenBoss::update(float deltaTime, Player& player) {
         numProjectiles = 0;
         spreadAngle = 1.0f;
         if (spiralTimer >= 0.15f) {
-            static float spiralAngle = 0.0f;
+            float spiralAngle = 0.0f;
             spiralAngle += 0.5f;
             for (int spiral = 0; spiral < 2; spiral++) {
                 for (int i = 0; i < 2; i++) {
@@ -920,7 +920,7 @@ void WardenBoss::update(float deltaTime, Player& player) {
         numProjectiles = 0;
         spreadAngle = 1.2f;
         if (spiralTimer >= 0.12f) {
-            static float spiralAngle = 0.0f;
+            float spiralAngle = 0.0f;
             spiralAngle += 0.6f;
             for (int spiral = 0; spiral < 3; spiral++) {
                 float angle = spiralAngle + (spiral * 3.14159f * 2 / 3);
@@ -936,7 +936,7 @@ void WardenBoss::update(float deltaTime, Player& player) {
             spiralTimer = 0.0f;
         }
         if (specialAttackTimer >= 2.5f) {
-            static int alternatePattern = 0;
+            int alternatePattern = 0;
             alternatePattern = (alternatePattern + 1) % 2;
             for (int i = 0; i < 12; i++) {
                 float angle = (i / 12.0f) * 3.14159f * 2 + (alternatePattern * 0.22f);
@@ -955,7 +955,7 @@ void WardenBoss::update(float deltaTime, Player& player) {
             int numCols = 10;
             float spacing = screenWidth / (numCols + 1.0f);
 
-            static int offset = 0;
+            int offset = 0;
             offset = (offset + 1) % 2;
 
             for (int i = offset; i < numCols; i += 2) {
