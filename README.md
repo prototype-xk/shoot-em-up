@@ -1,5 +1,3 @@
-quoi améliorer sur celui-ci
-
 # AeroBlade
 
 ## 🎮 Game Description
